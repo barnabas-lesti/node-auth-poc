@@ -1,11 +1,9 @@
-const consola = require('consola').withScope('dba');
+const consola = require('consola');
 
-const logger = consola.create({
-  // level: 4,
-  reporters: [
-    new consola.JSONReporter()
-  ],
-  defaults: {
-    additionalColor: 'white'
-  }
-})
+const config = require('./config');
+
+// TODO: implement custom logger
+consola.withScope(config.APP_ABBREVIATION);
+const logger = consola;
+
+module.exports = logger;

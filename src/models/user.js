@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const UserDto = require('./user.dto');
-
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -27,16 +25,23 @@ const UserSchema = new mongoose.Schema({
 
 const Model = mongoose.model('User', UserSchema);
 
-class UserDao {
+class User {
+  constructor ({ _id, email, fullName, profileImageId }) {
+    this.userId = _id;
+    this.email = email;
+    this.fullName = fullName;
+    this.profileImageId = profileImageId;
+  }
+
   static async findOne (...args) {
     const doc = await Model.findOne(...args);
-    return doc ? new UserDto(doc) : null;
+    return doc ? new User(doc) : null;
   }
 
   static async create (...args) {
     const doc = await Model.create(...args);
-    return doc ? new UserDto(doc) : null;
+    return doc ? new User(doc) : null;
   }
 }
 
-module.exports = UserDao;
+module.exports = User;
