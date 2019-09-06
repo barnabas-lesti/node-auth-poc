@@ -4,14 +4,17 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    ecmaVersion: 2017,
+    ecmaVersion: 6,
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+    },
   },
   extends: [
     'eslint:recommended',
     'plugin:node/recommended',
   ],
   rules: {
-    // 'comma-dangle': [ 2, 'always-multiline' ],
+    'comma-dangle': [ 2, 'always-multiline' ],
     // 'semi': [ 2, 'always' ],
     // 'curly': [ 2, 'multi-line' ],
     // 'space-before-function-paren': [ 2, 'always' ],

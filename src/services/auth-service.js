@@ -10,7 +10,7 @@ const {
 } = require('../config');
 const { User } = require('../models');
 
-class Auth {
+class AuthService {
   createAuthorizationHeaderString (accessToken, refreshToken) {
     return `Access ${accessToken}; Refresh ${refreshToken};`;
   }
@@ -127,4 +127,4 @@ class Auth {
   }
 }
 
-module.exports = new Auth();
+module.exports = new AuthService();
