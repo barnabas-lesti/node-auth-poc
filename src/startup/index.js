@@ -18,11 +18,11 @@ const connectToMongoDb = async () => {
 };
 
 const createTempFolder = async () => {
-  if (config.CLEAN_UP_TEMP_FOLDER && await fs.pathExists(config.TEMP_FOLDER_PATH)) await fs.remove(config.TEMP_FOLDER_PATH);
+  if (config.TEMP_FOLDER_CLEANUP && await fs.pathExists(config.TEMP_FOLDER_PATH)) await fs.remove(config.TEMP_FOLDER_PATH);
 
   await fs.ensureDir(config.TEMP_FOLDER_PATH);
-  logger.success(`TEMP folder ready (cleanup: ${config.CLEAN_UP_TEMP_FOLDER})`);
-}
+  logger.success(`TEMP folder ready (cleanup: ${config.TEMP_FOLDER_CLEANUP})`);
+};
 
 module.exports = {
   connectToMongoDb,

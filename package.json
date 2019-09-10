@@ -5,9 +5,9 @@
   "author": "Barnabas Lesti <barnabas.lesti@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development nodemon ./src/server --watch ./src --watch ./env --ext js,yml",
-    "start:test": "cross-env NODE_ENV=test node ./src/server",
-    "start:prod": "cross-env NODE_ENV=production node ./src/server",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./src/index --watch ./src --watch ./env --ext js,yml",
+    "start:test": "cross-env NODE_ENV=test node ./src/index",
+    "start:prod": "cross-env NODE_ENV=production node ./src/index",
     "test": "cross-env PORT=2000 AUTH_REGISTRATION_DISABLED=false node ./src/common/config",
     "lint": "eslint ."
   },

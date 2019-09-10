@@ -18,9 +18,9 @@ const { createTempFolder, connectToMongoDb } = require('./startup');
   // TODO: Init. routes
 
   await createTempFolder();
-  connectToMongoDb();
+  await connectToMongoDb();
 
   const server = await app.listen(config.PORT);
   const { address } = server.address();
-  logger.success(`Server running at http://${address}:${logger.PORT}`);
+  logger.success(`Server running at http://${address}:${config.PORT}`);
 })();

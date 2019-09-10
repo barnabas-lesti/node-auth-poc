@@ -16,7 +16,7 @@ const templates = {
           <body>
             Hi there,<br>
             <br>
-            To finish your registration click <a href="${link}" target="_blank" data-registration-link>here</a>.<br>
+            To finish your registration click <a href="${link}" target="_blank">here</a>.<br>
             <br>
             Best regards,<br>
             <strong>The Daisy Team</strong>
@@ -35,7 +35,7 @@ const templates = {
         <body>
           Hi there,<br>
           <br>
-          To reset your password, click <a href="${link}" target="_blank" data-password-reset-link>here</a><br>
+          To reset your password, click <a href="${link}" target="_blank">here</a><br>
           <br>
           Best regards,<br>
           <strong>The Daisy Team</strong>
@@ -46,7 +46,7 @@ const templates = {
   },
 
   'hu': {
-    [templateNames.REGISTRATION]: ({ link, expiresInMinutes }) => ({
+    [templateNames.REGISTRATION]: () => ({
       subject: 'TODO: Finish your registration to Daisy',
       content: `
         <!DOCTYPE html>
@@ -54,7 +54,7 @@ const templates = {
         </html>
       `,
     }),
-    [templateNames.PASSWORD_RESET]: ({ link, expiresInMinutes }) => ({
+    [templateNames.PASSWORD_RESET]: () => ({
       subject: 'TODO: Reset your password for Daisy',
       content: `
         <!DOCTYPE html>

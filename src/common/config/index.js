@@ -1,3 +1,4 @@
+const path = require('path');
 const packageJson = require('../../../package.json');
 
 const { getEnvConfig } = require('./utils');
@@ -10,6 +11,8 @@ module.exports = {
 
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
+  TEMP_FOLDER_PATH: path.join(__dirname, '../../../', envConfig.TEMP_FOLDER_PATH),
+  TEMP_FOLDER_CLEANUP: envConfig.TEMP_FOLDER_CLEANUP,
 
   PORT: envConfig.PORT,
 
@@ -21,4 +24,8 @@ module.exports = {
   AUTH_REFRESH_TOKEN_EXPIRATION: envConfig.AUTH_REFRESH_TOKEN_EXPIRATION,
   AUTH_EMAIL_TOKEN_EXPIRATION: envConfig.AUTH_EMAIL_TOKEN_EXPIRATION,
   AUTH_REGISTRATION_DISABLED: envConfig.AUTH_REGISTRATION_DISABLED,
+
+  EMAIL_MAILGUN_API_KEY: envConfig.EMAIL_MAILGUN_API_KEY,
+  EMAIL_MAILGUN_DOMAIN: envConfig.EMAIL_MAILGUN_DOMAIN,
+  EMAIL_FROM_ADDRESS: envConfig.EMAIL_FROM_ADDRESS,
 };

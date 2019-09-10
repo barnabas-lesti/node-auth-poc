@@ -2,24 +2,18 @@ const path = require('path');
 const fs = require('fs-extra');
 const mailgunJs = require('mailgun-js');
 
-const {
-  MAILGUN_API_KEY,
-  MAILGUN_DOMAIN,
-  EMAIL_FROM_ADDRESS,
-  TEMP_DIR_PATH,
-} = require('../../../../config/env');
-const Logger = require('../logger');
+const { config, logger } = require('../../common');
 const { templateNames, templates } = require('./templates');
 
 let mailgun;
-if (MAILGUN_API_KEY && MAILGUN_DOMAIN) {
+if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {
   mailgun = mailgunJs({
-    apiKey: MAILGUN_API_KEY,
-    domain: MAILGUN_DOMAIN,
+    apiKey: config.EMAIL_MAILGUN_API_KEY,
+    domain: config.EMAIL_MAILGUN_DOMAIN,
   });
-  Logger.success('MAILGUN setup successful');
+  logger.success('EMAIL_MAILGUN setup successful.');
 } else {
-  Logger.info('MAILGUN settings missing, mails will be saved to the TEMP folder');
+  logger.info('EMAIL_MAILGUN settings missing, mails will be saved to the TEMP folder.');
 }
 
 class Mail {
@@ -34,7 +28,7 @@ class Mail {
 
   async send () {
     const data = {
-      from: EMAIL_FROM_ADDRESS,
+      from: config.EMAIL_FROM_ADDRESS,
       to: this.to,
       subject: this.subject,
       html: this.content,
@@ -43,7 +37,7 @@ class Mail {
     if (mailgun) {
       await mailgun.messages().send(data);
     } else {
-      const emailFilePath = path.join(TEMP_DIR_PATH, './email', `${this.to}_${this.template}_${this.locale}.html`);
+      const emailFilePath = path.join(config.TEMP_FOLDER_PATH, './email', `${this.to}_${this.template}_${this.locale}.html`);
       await fs.outputFile(emailFilePath, data.html);
     }
     return this.content;

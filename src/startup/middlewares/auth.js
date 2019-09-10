@@ -1,10 +1,10 @@
-const { authService } = require('../services');
+const { auth } = require('../../services');
 
 module.exports = () => async (req, res, next) => {
   const authHeaderString = req.header('Authorization') || '';
   if (!authHeaderString) return next();
 
-  const verificationResult = await Auth.verifyAuthorizationHeaderString(authHeaderString);
+  const verificationResult = await auth.verifyAuthorizationHeaderString(authHeaderString);
   if (!verificationResult) return next();
 
   const { newHeaderString, payload } = verificationResult;

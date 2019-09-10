@@ -1,14 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const {
-  AUTH_SALT_ROUNDS,
-  AUTH_SECRET,
-  ACCESS_TOKEN_EXPIRATION_IN_MINUTES,
-  REFRESH_TOKEN_EXPIRATION_IN_MINUTES,
-  EMAIL_TOKEN_EXPIRATION_IN_MINUTES,
-} = require('../common/config');
-const UserDao = require('./user.dao');
+const { config } = require('../common');
+const User = require('../models/user');
 
 class Auth {
   createAuthorizationHeaderString (accessToken, refreshToken) {
@@ -16,7 +10,7 @@ class Auth {
   }
 
   async hashPassword (password) {
-    const passwordHash = await bcrypt.hash(`${password}`, AUTH_SALT_ROUNDS);
+    const passwordHash = await bcrypt.hash(`${password}`, config.AUTH_SALT_ROUNDS);
     return passwordHash;
   }
 
@@ -35,7 +29,7 @@ class Auth {
 
   async createEmailToken (user) {
     const { email } = user;
-    const token = await jwt.sign({ email }, AUTH_SECRET, { expiresIn: `${EMAIL_TOKEN_EXPIRATION_IN_MINUTES}m` });
+    const token = await jwt.sign({ email }, config.AUTH_SECRET, { expiresIn: `${config.EMAIL_TOKEN_EXPIRATION_IN_MINUTES}m` });
     return token;
   }
 
@@ -58,7 +52,7 @@ class Auth {
 
   async verifyEmailToken (emailToken) {
     try {
-      const payload = await jwt.verify(emailToken, AUTH_SECRET);
+      const payload = await jwt.verify(emailToken, config.AUTH_SECRET);
       return payload;
     } catch (jwtError) {
       return null;
@@ -70,27 +64,27 @@ class Auth {
   }
 
   _createRefreshTokenSecret ({ passwordHash }) {
-    return AUTH_SECRET + passwordHash;
+    return config.AUTH_SECRET + passwordHash;
   }
 
   async _createAccessToken (user) {
     const payload = this._createAuthTokenPayload(user);
-    const expiresIn = `${ACCESS_TOKEN_EXPIRATION_IN_MINUTES}m`;
-    const accessToken = await jwt.sign(payload, AUTH_SECRET, { expiresIn });
+    const expiresIn = `${config.ACCESS_TOKEN_EXPIRATION_IN_MINUTES}m`;
+    const accessToken = await jwt.sign(payload, config.AUTH_SECRET, { expiresIn });
     return accessToken;
   }
 
   async _createRefreshToken (user) {
     const payload = this._createAuthTokenPayload(user);
     const refreshTokenSecret = this._createRefreshTokenSecret(user);
-    const expiresIn = `${REFRESH_TOKEN_EXPIRATION_IN_MINUTES}m`;
+    const expiresIn = `${config.REFRESH_TOKEN_EXPIRATION_IN_MINUTES}m`;
     const refreshToken = await jwt.sign(payload, refreshTokenSecret, { expiresIn });
     return refreshToken;
   }
 
   async _verifyAccessToken (accessToken) {
     try {
-      const payload = await jwt.verify(accessToken, AUTH_SECRET);
+      const payload = await jwt.verify(accessToken, config.AUTH_SECRET);
       return payload;
     } catch (jwtError) {
       return null;
@@ -101,7 +95,7 @@ class Auth {
     const initialPayload = jwt.decode(refreshToken);
     if (!initialPayload) return null;
 
-    const user = await UserDao.findOne({ email: initialPayload.email });
+    const user = await User.findOne({ email: initialPayload.email });
     if (!user) return null;
 
     try {

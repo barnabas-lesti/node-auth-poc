@@ -1,7 +1,7 @@
-// const envConfig = require('../../../config/env');
+// const { config } = require('../../common');
 
 module.exports = () => (req, res, next) => {
-  // Will be able to add configuration forcing here
+  // TODO: Implement context based config resolution (config forcing, override, etc.)
   req.config = {};
   return next();
 };

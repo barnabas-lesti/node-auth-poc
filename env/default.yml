@@ -3,7 +3,7 @@ PORT: 3000
 MONGO_USERNAME: ''
 MONGO_PASSWORD: ''
 MONGO_DB_NAME: 'daisy'
-MONGO_URI: 'http://localhost/<MONGO_DB_NAME>'
+MONGO_URI: 'mongodb+srv://daisyDevAdmin:d41syDr0e4dk1n@daisy-dev-eu-west-1-3ur5u.mongodb.net/test?retryWrites=true&w=majority'
 
 AUTH_SECRET: 'defaultSecret1234'
 AUTH_SALT_ROUNDS: 10
@@ -11,3 +11,10 @@ AUTH_ACCESS_TOKEN_EXPIRATION: '5m'
 AUTH_REFRESH_TOKEN_EXPIRATION: '7d'
 AUTH_EMAIL_TOKEN_EXPIRATION: '2h'
 AUTH_REGISTRATION_DISABLED: false
+
+EMAIL_MAILGUN_API_KEY: ''
+EMAIL_MAILGUN_DOMAIN: ''
+EMAIL_FROM_ADDRESS: ''
+
+TEMP_FOLDER_PATH: './temp'
+TEMP_FOLDER_CLEANUP: false

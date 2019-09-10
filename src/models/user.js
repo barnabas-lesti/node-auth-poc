@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema({
   fullName: {
     type: String,
     trim: true,
+    required: true,
   },
   profileImageId: {
     type: String,
@@ -26,8 +27,8 @@ const UserSchema = new mongoose.Schema({
 const Model = mongoose.model('User', UserSchema);
 
 class User {
-  constructor ({ _id, email, fullName, profileImageId }) {
-    this.userId = _id;
+  constructor ({ _id, userId, email, fullName, profileImageId }) {
+    this.userId = _id || userId;
     this.email = email;
     this.fullName = fullName;
     this.profileImageId = profileImageId;

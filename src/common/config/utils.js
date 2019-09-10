@@ -66,7 +66,7 @@ const populateConfigString = (configString, rawEnvConfig) => {
       replacementValue.match(POPULATION_REGEX)
     ) replacementValue = populateConfigString(replacementValue, rawEnvConfig);
 
-    populatedConfigString = populatedConfigString.replace(matchString, replacementValue)
+    populatedConfigString = populatedConfigString.replace(matchString, replacementValue);
   }
 
   return populatedConfigString;
