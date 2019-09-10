@@ -2,26 +2,25 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { config, logger } = require('./common');
-const { createTempFolder, connectToMongoDb } = require('./startup');
-const { initializeRoutes } = require('./routes');
+const { core } = require('./services');
 
 (async () => {
   const app = express();
 
-  logger.info(`Using configuration: "${config.NODE_ENV}"`);
+  logger.info(`Using configuration: "${config.NODE_ENV}".`);
 
   app.use('*', [
     bodyParser.json(),
-    require('./startup/middlewares/config')(),
-    require('./startup/middlewares/auth')(),
+    require('./middlewares/config')(),
+    require('./middlewares/auth')(),
   ]);
 
-  initializeRoutes(app);
+  core.initializeRoutes(app);
 
-  // await createTempFolder();
-  // await connectToMongoDb();
+  await core.createTempFolder();
+  await core.connectToMongoDb();
 
   const server = await app.listen(config.PORT);
   const { address } = server.address();
-  logger.success(`Server running at http://${address}:${config.PORT}`);
+  logger.success(`Server running at http://${address}:${config.PORT}.`);
 })();
