@@ -2,8 +2,8 @@ PORT: 3000
 
 MONGO_USERNAME: ''
 MONGO_PASSWORD: ''
-MONGO_DB_NAME: 'daisy'
-MONGO_URI: 'mongodb+srv://daisyDevAdmin:d41syDr0e4dk1n@daisy-dev-eu-west-1-3ur5u.mongodb.net/test?retryWrites=true&w=majority'
+MONGO_DB_NAME: ''
+MONGO_URI: ''
 
 AUTH_SECRET: 'defaultSecret1234'
 AUTH_SALT_ROUNDS: 10

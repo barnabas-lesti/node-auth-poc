@@ -3,22 +3,23 @@ const bodyParser = require('body-parser');
 
 const { config, logger } = require('./common');
 const { createTempFolder, connectToMongoDb } = require('./startup');
+const { initializeRoutes } = require('./routes');
 
 (async () => {
   const app = express();
 
   logger.info(`Using configuration: "${config.NODE_ENV}"`);
 
-  app.use('/api', [
+  app.use('*', [
     bodyParser.json(),
     require('./startup/middlewares/config')(),
     require('./startup/middlewares/auth')(),
   ]);
 
-  // TODO: Init. routes
+  initializeRoutes(app);
 
-  await createTempFolder();
-  await connectToMongoDb();
+  // await createTempFolder();
+  // await connectToMongoDb();
 
   const server = await app.listen(config.PORT);
   const { address } = server.address();
