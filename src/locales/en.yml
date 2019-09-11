@@ -1,7 +1,21 @@
 emails:
   emailVerification:
     subject: 'Please verify your email address'
-    greeting: 'Hi there!'
-    content: 'To verify your email address click <a href="${href}" target="_blank">here</a>.'
-    farewell: 'Best regards,'
-    sender: 'The Daisy Team'
+    content: "
+      Hi there!<br>
+      <br>
+      Please verify your email address by clicking <a href=\"${linkHref}\" target=\"_blank\">here</a>.<br>
+      <br>
+      Best regards,<br>
+      The Daisy Team
+    "
+  passwordReset:
+    subject: 'Reset your password'
+    content: "
+      Hi there!<br>
+      <br>
+      To reset your password click <a href=\"${linkHref}\" target=\"_blank\">here</a>.<br>
+      <br>
+      Best regards,<br>
+      The Daisy Team
+    "
