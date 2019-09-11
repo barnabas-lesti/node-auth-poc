@@ -1,0 +1,7 @@
+emails:
+  emailVerification:
+    subject: 'Please verify your email address'
+    greeting: 'Hi there!'
+    content: 'To verify your email address click <a href="${href}" target="_blank">here</a>.'
+    farewell: 'Best regards,'
+    sender: 'The Daisy Team'

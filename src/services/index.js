@@ -1,5 +1,7 @@
 module.exports = {
   auth: require('./auth'),
   core: require('./core'),
-  mail: require('./mail'),
+  router: require('./router'),
+  email: require('./email'),
+  i18n: require('./i18n'),
 };

@@ -15,6 +15,7 @@ module.exports = {
   TEMP_FOLDER_CLEANUP: envConfig.TEMP_FOLDER_CLEANUP,
 
   PORT: envConfig.PORT,
+  DEFAULT_LOCALE: envConfig.DEFAULT_LOCALE,
 
   MONGO_URI: envConfig.MONGO_URI,
 
