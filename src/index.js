@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { config, logger } = require('./common');
-const { core, router } = require('./services');
+const { core, router, timer } = require('./services');
 
 (async () => {
+  const timerInstance = timer.createTimer();
   const app = express();
 
   logger.info(`Using configuration: "${config.NODE_ENV}"`);
@@ -22,5 +23,5 @@ const { core, router } = require('./services');
 
   const server = await app.listen(config.PORT);
   const { address } = server.address();
-  logger.info(`Server running at http://${address}:${config.PORT}`);
+  logger.info(`Server running at http://${address}:${config.PORT} (${timerInstance.finish()}ms)`);
 })();
