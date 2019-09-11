@@ -11,10 +11,11 @@ module.exports = {
 
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
-  TEMP_FOLDER_PATH: path.join(__dirname, '../../../', envConfig.TEMP_FOLDER_PATH),
-  TEMP_FOLDER_CLEANUP: envConfig.TEMP_FOLDER_CLEANUP,
+  TEMP_FOLDER_PATH: path.join(__dirname, '../../../temp'),
+  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
 
   PORT: envConfig.PORT,
+  DEFAULT_LOCALE: envConfig.DEFAULT_LOCALE,
 
   MONGO_URI: envConfig.MONGO_URI,
 

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { config, logger } = require('./common');
-const { core } = require('./services');
+const { core, router } = require('./services');
 
 (async () => {
   const app = express();
@@ -15,7 +15,7 @@ const { core } = require('./services');
     require('./middlewares/auth')(),
   ]);
 
-  core.initializeRoutes(app);
+  router.initializeRoutes(app);
 
   await core.createTempFolder();
   await core.connectToMongoDb();
