@@ -29,7 +29,8 @@ class Auth {
 
   async createEmailToken (user) {
     const { email } = user;
-    const token = await jwt.sign({ email }, config.AUTH_SECRET, { expiresIn: `${config.EMAIL_TOKEN_EXPIRATION_IN_MINUTES}m` });
+    const expiresIn = config.AUTH_EMAIL_TOKEN_EXPIRATION;
+    const token = await jwt.sign({ email }, config.AUTH_SECRET, { expiresIn });
     return token;
   }
 
@@ -69,7 +70,7 @@ class Auth {
 
   async _createAccessToken (user) {
     const payload = this._createAuthTokenPayload(user);
-    const expiresIn = `${config.ACCESS_TOKEN_EXPIRATION_IN_MINUTES}m`;
+    const expiresIn = config.AUTH_ACCESS_TOKEN_EXPIRATION;
     const accessToken = await jwt.sign(payload, config.AUTH_SECRET, { expiresIn });
     return accessToken;
   }
@@ -77,7 +78,7 @@ class Auth {
   async _createRefreshToken (user) {
     const payload = this._createAuthTokenPayload(user);
     const refreshTokenSecret = this._createRefreshTokenSecret(user);
-    const expiresIn = `${config.REFRESH_TOKEN_EXPIRATION_IN_MINUTES}m`;
+    const expiresIn = config.AUTH_REFRESH_TOKEN_EXPIRATION;
     const refreshToken = await jwt.sign(payload, refreshTokenSecret, { expiresIn });
     return refreshToken;
   }

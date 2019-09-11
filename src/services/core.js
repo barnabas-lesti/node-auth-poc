@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 
 const { config, logger } = require('../common');
 
+const ROUTES_FOLDER_PATH = path.join(__dirname, '../routes');
+
 class Core {
   async connectToMongoDb () {
     if (config.MONGO_URI) {
@@ -14,9 +16,9 @@ class Core {
       mongoose.Promise = Promise;
 
       await mongoose.connect(config.MONGO_URI);
-      logger.success('Connected to MongoDB.');
+      logger.info('Connected to MongoDB.');
     } else {
-      logger.info('MONGO_URI not set, skipping MongoDB connection.');
+      logger.info('MONGO_URI not set, skipping MongoDB connection');
     }
   }
 
@@ -24,31 +26,26 @@ class Core {
     if (config.TEMP_FOLDER_CLEANUP && await fs.pathExists(config.TEMP_FOLDER_PATH)) await fs.remove(config.TEMP_FOLDER_PATH);
 
     await fs.ensureDir(config.TEMP_FOLDER_PATH);
-    logger.success(`TEMP folder ready (cleanup: ${config.TEMP_FOLDER_CLEANUP}).`);
+    logger.info(`TEMP folder ready (cleanup: ${config.TEMP_FOLDER_CLEANUP})`);
   }
 
   initializeRoutes (app) {
-    const routesFolderPath = path.join(__dirname, '../routes');
-    const modulePaths = glob.sync(path.join(routesFolderPath, '**/*.js'));
+    const modulePaths = glob.sync(path.join(ROUTES_FOLDER_PATH, '**/*.js'));
 
     for (const modulePath of modulePaths) {
       const routeModule = require(modulePath);
       if (this._isModuleEmpty(routeModule)) continue;
 
-      const urlPath = path
-        .normalize(modulePath)
-        .replace(routesFolderPath, '')
-        .replace(/\.js/g, '')
-        .replace(/\/index$/, '')
-        .replace(/\\/g, '/');
+      const normalizedRoutePath = this._normalizeRoutePath(modulePath);
+      const finalRoutePath = this._convertRouteParamsInRoutePath(normalizedRoutePath);
 
       for (const [ method, handler ] of Object.entries(routeModule)) {
         if (!this._isFunction(handler)) continue;
 
-        app.route(urlPath)[method](handler);
+        app.route(finalRoutePath)[method](handler);
       }
     }
-    logger.success('Routes initialized.');
+    logger.info('Routes initialized');
   }
 
   _isModuleEmpty (candidate) {
@@ -57,6 +54,31 @@ class Core {
 
   _isFunction (candidate) {
     return candidate && typeof candidate === 'function';
+  }
+
+  _normalizeRoutePath (routePath) {
+    return path
+      .normalize(routePath)
+      .replace(ROUTES_FOLDER_PATH, '')
+      .replace(/\.js/g, '')
+      .replace(/\/index$/, '')
+      .replace(/\\/g, '/');
+  }
+
+  _convertRouteParamsInRoutePath (routePath) {
+    return routePath
+      .split('/')
+      .map(fragment => {
+        if (!fragment.startsWith('_')) return fragment;
+
+        return fragment
+          .replace('_', ':')
+          .replace(/([-][a-z])/g, (group) => group
+            .toUpperCase()
+            .replace('-', '')
+          );
+      })
+      .join('/');
   }
 }
 

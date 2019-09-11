@@ -11,9 +11,9 @@ if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {
     apiKey: config.EMAIL_MAILGUN_API_KEY,
     domain: config.EMAIL_MAILGUN_DOMAIN,
   });
-  logger.success('EMAIL_MAILGUN setup successful.');
+  logger.info('EMAIL_MAILGUN setup successful');
 } else {
-  logger.info('EMAIL_MAILGUN settings missing, mails will be saved to the TEMP folder.');
+  logger.info('EMAIL_MAILGUN settings missing, mails will be saved to the TEMP folder');
 }
 
 class Mail {

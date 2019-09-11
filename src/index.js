@@ -7,7 +7,7 @@ const { core } = require('./services');
 (async () => {
   const app = express();
 
-  logger.info(`Using configuration: "${config.NODE_ENV}".`);
+  logger.info(`Using configuration: "${config.NODE_ENV}"`);
 
   app.use('*', [
     bodyParser.json(),
@@ -22,5 +22,5 @@ const { core } = require('./services');
 
   const server = await app.listen(config.PORT);
   const { address } = server.address();
-  logger.success(`Server running at http://${address}:${config.PORT}.`);
+  logger.info(`Server running at http://${address}:${config.PORT}`);
 })();

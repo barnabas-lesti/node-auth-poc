@@ -27,9 +27,10 @@ const UserSchema = new mongoose.Schema({
 const Model = mongoose.model('User', UserSchema);
 
 class User {
-  constructor ({ _id, userId, email, fullName, profileImageId }) {
+  constructor ({ _id, userId, email, passwordHash, fullName, profileImageId }) {
     this.userId = _id || userId;
     this.email = email;
+    this.passwordHash = passwordHash;
     this.fullName = fullName;
     this.profileImageId = profileImageId;
   }
