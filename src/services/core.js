@@ -6,6 +6,11 @@ const config = require('../common/config');
 const logger = require('../common/logger');
 const timer = require('../services/timer');
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useNewUrlParser', true);
+mongoose.Promise = Promise;
+
 class Core {
   constructor () {
     this._mongoDbConnection = null;
@@ -13,18 +18,13 @@ class Core {
 
   async connectToMongoDb () {
     const timerInstance = timer.createTimer();
-    if (config.MONGO_URI) {
-      mongoose.set('useFindAndModify', false);
-      mongoose.set('useCreateIndex', true);
-      mongoose.set('useNewUrlParser', true);
-      mongoose.Promise = Promise;
 
-      const { connection } = await mongoose.connect(config.MONGO_URI);
-      this._mongoDbConnection = connection;
-      logger.info(`Connected to MongoDB (${timerInstance.finish()}ms)`);
-    } else {
-      logger.info('MONGO_URI not set, skipping MongoDB connection');
-    }
+    const mongoUri = config.MONGO_URI || await this._createInMemoryMongoDb();
+    const { connection } = await mongoose.connect(mongoUri);
+    this._mongoDbConnection = connection;
+
+    if (config.MONGO_URI) logger.info(`Connected to MongoDB (${timerInstance.finish()}ms)`);
+    else logger.warn(`MONGO_URI not set, initialized and connected to In-Memory MongoDB (${timerInstance.finish()}ms)`);
   }
 
   async disconnectFromMongoDb () {
@@ -42,6 +42,13 @@ class Core {
 
     await fs.ensureDir(config.TEMP_FOLDER_PATH);
     logger.info(`Temp folder ready (cleanup: ${config.CLEAN_TEMP_FOLDER})`);
+  }
+
+  async _createInMemoryMongoDb () {
+    const { MongoMemoryServer } = require('mongodb-memory-server');
+    const inMemoryMongoDb = new MongoMemoryServer();
+    const inMemoryMongoUri = await inMemoryMongoDb.getConnectionString();
+    return inMemoryMongoUri;
   }
 }
 

@@ -15,7 +15,7 @@ if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {
   });
   logger.info('Mailgun setup successful');
 } else {
-  logger.info('Mailgun settings missing, emails will be saved to the temp folder');
+  logger.warn('Mailgun settings missing, emails will be saved to the temp folder');
 }
 
 const EMAIL_TEMPLATES_FOLDER_PATH = path.join(__dirname, '../templates/email');
