@@ -1,22 +1,40 @@
+const path = require('path');
 const winston = require('winston');
 
 const config = require('./config');
 
-const transports = [
-  new winston.transports.Console(),
-];
-
 const { combine, colorize, label, timestamp, printf } = winston.format;
-const format = combine(
-  colorize(),
+const baseFormatConfig = [
   label({ label: config.APP_ABBREVIATION }),
   timestamp(),
-  printf(({ level, message, label, timestamp }) => `${timestamp} [${label}] ${level}: ${message}`),
-);
+  printf(({ level, message, label, timestamp }) => `${timestamp} [${label}] ${level}: ${message}`)
+];
 
-module.exports = winston.createLogger({
+const transports = [
+  new winston.transports.Console({
+    format: combine(
+      colorize(),
+      ...baseFormatConfig,
+    ),
+  }),
+];
+
+if (config.LOG_TO_FILE) {
+  transports.push(new winston.transports.File({
+    filename: generateLogFilePath(),
+  }));
+}
+
+const logger = winston.createLogger({
   level: config.IS_TEST ? 'error': 'info',
+  format: combine(...baseFormatConfig),
   exitOnError: false,
-  format,
   transports,
 });
+
+function generateLogFilePath () {
+  const fileName = `${new Date()}.log`;
+  return path.join(__dirname, '../../logs', fileName);
+}
+
+module.exports = logger;

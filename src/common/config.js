@@ -17,10 +17,11 @@ const config = {
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
   IS_TEST: process.env.NODE_ENV === 'test',
   TEMP_FOLDER_PATH: path.join(__dirname, '../../../temp'),
-  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
 
   PORT: envConfig.PORT,
   DEFAULT_LOCALE: envConfig.DEFAULT_LOCALE,
+  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
+  LOG_TO_FILE: envConfig.LOG_TO_FILE,
 
   MONGO_URI: envConfig.MONGO_URI,
 
