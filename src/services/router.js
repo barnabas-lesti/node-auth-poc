@@ -1,7 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 
-const { logger } = require('../common');
+const logger = require('../common/logger');
 
 const ROUTES_FOLDER_PATH = path.join(__dirname, '../routes');
 

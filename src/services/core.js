@@ -2,20 +2,38 @@
 const fs = require('fs-extra');
 const mongoose = require('mongoose');
 
-const { config, logger } = require('../common');
+const config = require('../common/config');
+const logger = require('../common/logger');
+const timer = require('../services/timer');
 
 class Core {
+  constructor () {
+    this._mongoDbConnection = null;
+  }
+
   async connectToMongoDb () {
+    const timerInstance = timer.createTimer();
     if (config.MONGO_URI) {
       mongoose.set('useFindAndModify', false);
       mongoose.set('useCreateIndex', true);
       mongoose.set('useNewUrlParser', true);
       mongoose.Promise = Promise;
 
-      await mongoose.connect(config.MONGO_URI);
-      logger.info('Connected to MongoDB');
+      const { connection } = await mongoose.connect(config.MONGO_URI);
+      this._mongoDbConnection = connection;
+      logger.info(`Connected to MongoDB (${timerInstance.finish()}ms)`);
     } else {
       logger.info('MONGO_URI not set, skipping MongoDB connection');
+    }
+  }
+
+  async disconnectFromMongoDb () {
+    if (this._mongoDbConnection) {
+      await this._mongoDbConnection.close();
+      this._mongoDbConnection = null;
+      logger.info('Disconnected from MongoDB');
+    } else {
+      logger.info('No active MongoDB connections, disconnection aborted');
     }
   }
 

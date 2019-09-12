@@ -2,13 +2,16 @@
   "name": "daisy-backend-app",
   "version": "1.0.0",
   "description": "Backend API application for Daisy.",
+  "daisy": {
+    "abbreviation": "dba"
+  },
   "author": "Barnabas Lesti <barnabas.lesti@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development nodemon ./src/index --watch ./src --watch ./env --ext js,yml",
-    "start:test": "cross-env NODE_ENV=test node ./src/index",
-    "start:prod": "cross-env NODE_ENV=production node ./src/index",
-    "test": "cross-env PORT=2000 nodemon ./src/services/email",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./src/app --watch ./src --watch ./env --ext js,yml",
+    "start:test": "cross-env NODE_ENV=test nodemon ./src/app --watch ./src --watch ./env --ext js,yml",
+    "start:prod": "cross-env NODE_ENV=production node ./src/app",
+    "test": "cross-env NODE_ENV=test mocha --config ./test/.mocharc.js",
     "lint": "eslint ."
   },
   "engines": {
@@ -30,11 +33,12 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^5.15.1",
     "eslint-plugin-node": "^10.0.0",
+    "faker": "^4.1.0",
+    "mocha": "^6.2.0",
     "nodemon": "^1.18.9"
-  },
-  "daisy": {
-    "abbreviation": "dba"
   }
 }
