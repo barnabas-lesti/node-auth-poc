@@ -2,7 +2,8 @@
 const fs = require('fs-extra');
 const mongoose = require('mongoose');
 
-const { config, logger } = require('../common');
+const config = require('../common/config');
+const logger = require('../common/logger');
 const timer = require('../services/timer');
 
 class Core {

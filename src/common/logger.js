@@ -14,10 +14,9 @@ const format = combine(
   printf(({ level, message, label, timestamp }) => `${timestamp} [${label}] ${level}: ${message}`),
 );
 
-const logger = winston.createLogger({
+module.exports = winston.createLogger({
+  level: config.IS_TEST ? 'error': 'info',
   exitOnError: false,
   format,
   transports,
 });
-
-module.exports = logger;

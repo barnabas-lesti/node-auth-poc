@@ -1,54 +1,85 @@
 const path = require('path');
+const packageJson = require('../../package.json');
 const requireYml = require('require-yml');
 
-const ENV_FOLDER_PATH = '../../../env';
+const ENV_FOLDER_PATH = '../../env';
 const POPULATION_REGEX = /<(.*?)>/g;
 const TOKEN_TO_KEY_REGEX = /<|>/g;
 
-const getEnvConfig = () => {
+const envConfig = getEnvConfig();
+
+const config = {
+  APP_NAME: packageJson.name,
+  APP_VERSION: packageJson.version,
+  APP_ABBREVIATION: packageJson.daisy.abbreviation,
+
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  IS_PRODUCTION: process.env.NODE_ENV === 'production',
+  IS_TEST: process.env.NODE_ENV === 'test',
+  TEMP_FOLDER_PATH: path.join(__dirname, '../../../temp'),
+  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
+
+  PORT: envConfig.PORT,
+  DEFAULT_LOCALE: envConfig.DEFAULT_LOCALE,
+
+  MONGO_URI: envConfig.MONGO_URI,
+
+  AUTH_SECRET: envConfig.AUTH_SECRET,
+  AUTH_SALT_ROUNDS: envConfig.AUTH_SALT_ROUNDS,
+  AUTH_ACCESS_TOKEN_EXPIRATION: envConfig.AUTH_ACCESS_TOKEN_EXPIRATION,
+  AUTH_REFRESH_TOKEN_EXPIRATION: envConfig.AUTH_REFRESH_TOKEN_EXPIRATION,
+  AUTH_EMAIL_TOKEN_EXPIRATION: envConfig.AUTH_EMAIL_TOKEN_EXPIRATION,
+  AUTH_REGISTRATION_DISABLED: envConfig.AUTH_REGISTRATION_DISABLED,
+
+  EMAIL_MAILGUN_API_KEY: envConfig.EMAIL_MAILGUN_API_KEY,
+  EMAIL_MAILGUN_DOMAIN: envConfig.EMAIL_MAILGUN_DOMAIN,
+  EMAIL_FROM_ADDRESS: envConfig.EMAIL_FROM_ADDRESS,
+};
+
+function getEnvConfig () {
   const rawEnvConfigFromConfigFiles = getRawEnvConfigFromConfigFiles();
   const rawEnvConfig = {
     ...rawEnvConfigFromConfigFiles,
     ...getRawEnvConfigFromProcessEnv(rawEnvConfigFromConfigFiles),
   };
   return populateConfig(rawEnvConfig);
-};
+}
 
-const getRawEnvConfigFromConfigFiles = () => {
+function getRawEnvConfigFromConfigFiles () {
   const rawConfigPack = requireYml(path.join(__dirname, ENV_FOLDER_PATH));
   return {
     ...(rawConfigPack.default || {}),
     ...(rawConfigPack[process.env.NODE_ENV] || {}),
     ...(rawConfigPack.local || {}),
   };
-};
+}
 
-const getRawEnvConfigFromProcessEnv = (rawEnvConfig) => {
+function getRawEnvConfigFromProcessEnv (rawEnvConfig) {
   const configFromProcessEnv = {};
   for (const existingConfigKey of Object.keys(rawEnvConfig)) {
     const processEnvValue = process.env[existingConfigKey];
     if (processEnvValue !== undefined) configFromProcessEnv[existingConfigKey] = parseToPrimitive(processEnvValue);
   }
   return configFromProcessEnv;
-};
+}
 
-const parseToPrimitive = (value) => {
+function parseToPrimitive (value) {
   const number = Number(value);
   if (number) return number;
   if (value === 'true' || value === 'false') return value === 'true';
   return value;
-};
+}
 
-const populateConfig = (rawEnvConfig) => {
+function populateConfig (rawEnvConfig) {
   const parsedConfig = {};
   for (const key of Object.keys(rawEnvConfig)) {
     const configString = rawEnvConfig[key];
     parsedConfig[key] = populateConfigString(configString, rawEnvConfig);
   }
   return parsedConfig;
-};
+}
 
-const populateConfigString = (configString, rawEnvConfig) => {
+function populateConfigString (configString, rawEnvConfig) {
   if (
     !configString ||
     typeof configString !== 'string' ||
@@ -70,8 +101,6 @@ const populateConfigString = (configString, rawEnvConfig) => {
   }
 
   return populatedConfigString;
-};
+}
 
-module.exports = {
-  getEnvConfig,
-};
+module.exports = config;

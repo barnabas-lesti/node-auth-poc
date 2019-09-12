@@ -1,7 +1,3 @@
-function finish () {
-  return (new Date()).getTime() - this.startTime;
-}
-
 class Timer {
   createTimer () {
     return {
@@ -9,6 +5,10 @@ class Timer {
       finish,
     };
   }
+}
+
+function finish () {
+  return (new Date()).getTime() - this.startTime;
 }
 
 module.exports = new Timer();

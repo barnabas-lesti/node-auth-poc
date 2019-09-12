@@ -1,4 +1,4 @@
-const { auth } = require('../services');
+const auth = require('../services/auth');
 
 module.exports = () => async (req, res, next) => {
   const authHeaderString = req.header('Authorization') || '';

@@ -1,10 +1,11 @@
-const { config, logger } = require('../../../common');
-const { auth } = require('../../../services');
-const { User } = require('../../../models');
+const config = require('../../../common/config');
+const logger = require('../../../common/logger');
+const auth = require('../../../services/auth');
+const User = require('../../../models/user');
 
 module.exports = {
   async post (req, res) {
-    if (config.AUTH_REGISTRATION_DISABLED) return res.sendStatus(403);
+    if (config.AUTH_REGISTRATION_DISABLED) return res.sendStatus(501);
 
     const { email, password, fullName } = req.body;
     if (!email || !password || !fullName) return res.sendStatus(400);

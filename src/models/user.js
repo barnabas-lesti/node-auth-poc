@@ -45,8 +45,8 @@ class User {
     return doc ? new User(doc) : null;
   }
 
-  static async delete (...args) {
-    await Model.delete(...args);
+  static async deleteMany (...args) {
+    await Model.deleteMany(...args);
   }
 }
 

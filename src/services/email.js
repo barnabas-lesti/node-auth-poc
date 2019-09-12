@@ -3,8 +3,9 @@ const fs = require('fs-extra');
 const mailgunJs = require('mailgun-js');
 const handlebars = require('handlebars');
 
-const { config, logger } = require('../common');
-const { i18n } = require('../services');
+const config = require('../common/config');
+const logger = require('../common/logger');
+const i18n = require('../services/i18n');
 
 let mailgun;
 if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {

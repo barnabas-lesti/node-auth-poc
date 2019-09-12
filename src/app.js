@@ -1,13 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { config, logger } = require('./common');
-const { core, router, timer } = require('./services');
+const config = require('./common/config');
+const logger = require('./common/logger');
+const core = require('./services/core');
+const router = require('./services/router');
+const timer = require('./services/timer');
+
+const app = express();
 
 (async () => {
   const timerInstance = timer.createTimer();
-  const app = express();
-
   logger.info(`Using configuration: "${config.NODE_ENV}"`);
 
   app.use('*', [
@@ -25,3 +28,5 @@ const { core, router, timer } = require('./services');
   const { address } = server.address();
   logger.info(`Server running at http://${address}:${config.PORT} (${timerInstance.finish()}ms)`);
 })();
+
+module.exports = app;

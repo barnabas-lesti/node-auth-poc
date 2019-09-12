@@ -2,7 +2,7 @@ const path = require('path');
 const requireYml = require('require-yml');
 const LocalizedStrings = require('localized-strings').default;
 
-const { config } = require('../common');
+const config = require('../common/config');
 
 const LOCALES_FOLDER_PATH = path.join(__dirname, '../locales');
 
