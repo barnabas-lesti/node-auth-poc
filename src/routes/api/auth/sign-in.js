@@ -10,8 +10,7 @@ module.exports = {
     try {
       const user = await User.findOne({ email });
       if (user && await auth.comparePasswords(password, user.passwordHash)) {
-        const { accessToken, refreshToken } = await auth.createAccessAndRefreshTokens(user);
-        res.set('Authorization', auth.createAuthorizationHeaderString(accessToken, refreshToken));
+        res.set('Authorization', await auth.createAuthorizationHeaderStringFromUser(user));
         return res.sendStatus(200);
       }
 

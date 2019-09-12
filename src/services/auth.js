@@ -5,8 +5,13 @@ const config = require('../common/config');
 const User = require('../models/user');
 
 class Auth {
-  createAuthorizationHeaderString (accessToken, refreshToken) {
+  createAuthorizationHeaderStringFromTokens (accessToken, refreshToken) {
     return `Access ${accessToken}; Refresh ${refreshToken};`;
+  }
+
+  async createAuthorizationHeaderStringFromUser (user) {
+    const { accessToken, refreshToken } = await this.createAccessAndRefreshTokens(user);
+    return this.createAuthorizationHeaderStringFromTokens(accessToken, refreshToken);
   }
 
   async hashPassword (password) {
@@ -46,7 +51,7 @@ class Auth {
     const { newAccessToken, payload } = verificationResult;
 
     return {
-      newHeaderString: newAccessToken ? this.createAuthorizationHeaderString(newAccessToken, refreshToken) : null,
+      newHeaderString: newAccessToken ? this.createAuthorizationHeaderStringFromTokens(newAccessToken, refreshToken) : null,
       payload,
     };
   }

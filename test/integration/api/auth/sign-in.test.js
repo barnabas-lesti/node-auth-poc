@@ -1,23 +1,8 @@
-const { agent, getUrl, moduleProxy, expect, faker } = require('../../resources');
+const { agent, moduleProxy, expect, faker, methods } = require('../../resources');
 
 const { User, auth } = moduleProxy;
 
-const url = getUrl(__filename);
-const post = () => agent().post(url);
-const createUser = async () => {
-  const email = faker.internet.email();
-  const password = faker.internet.password();
-  const fullName = faker.name.findName();
-
-  const passwordHash = await auth.hashPassword(password);
-  await User.create({ email, passwordHash, fullName });
-
-  return {
-    email,
-    password,
-    fullName,
-  };
-};
+const url = '/api/auth/sign-in';
 
 describe(url, () => {
   beforeEach(async () => {
@@ -25,7 +10,9 @@ describe(url, () => {
   });
 
   describe('POST', () => {
-    it('Response should have status 400 if required fields are missing', async () => {
+    const post = () => agent().post(url);
+
+    it('Should have status 400 if required fields are missing', async () => {
       const email = faker.internet.email();
       const password = faker.internet.password();
 
@@ -38,7 +25,7 @@ describe(url, () => {
       expect(noPasswordResponse.status).to.equal(400);
     });
 
-    it('Response should have status 401 if user was not found', async () => {
+    it('Should have status 401 if user was not found', async () => {
       const email = faker.internet.email();
       const password = faker.internet.password();
 
@@ -47,8 +34,8 @@ describe(url, () => {
       expect(status).to.equal(401);
     });
 
-    it('Response should have status 401 if credentials are invalid', async () => {
-      const { email } = await createUser();
+    it('Should have status 401 if credentials are invalid', async () => {
+      const { email } = await methods.createUser();
       const invalidPassword = faker.internet.password();
 
       const { status } = await post().send({ email, password: invalidPassword });
@@ -56,8 +43,8 @@ describe(url, () => {
       expect(status).to.equal(401);
     });
 
-    it('Response should have status 200 and "Authorization" header set if sign in was successful', async () => {
-      const { email, password } = await createUser();
+    it('Should have status 200 and "Authorization" header set if sign in was successful', async () => {
+      const { email, password } = await methods.createUser();
 
       const { status, headers } = await post().send({ email, password });
 
