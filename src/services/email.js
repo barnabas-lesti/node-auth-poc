@@ -7,6 +7,8 @@ const config = require('../common/config');
 const logger = require('../common/logger');
 const i18n = require('../services/i18n');
 
+const EMAIL_TEMPLATES_FOLDER_PATH = path.join(__dirname, '../templates/email');
+
 let mailgun;
 if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {
   mailgun = mailgunJs({
@@ -17,8 +19,6 @@ if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {
 } else {
   logger.warn('Mailgun settings missing, emails will be saved to the temp folder');
 }
-
-const EMAIL_TEMPLATES_FOLDER_PATH = path.join(__dirname, '../templates/email');
 
 class Email {
   async sendEmailVerification (to, linkHref, locale = config.DEFAULT_LOCALE) {
