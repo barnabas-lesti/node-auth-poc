@@ -44,6 +44,10 @@ class User {
     const doc = await Model.create(...args);
     return doc ? new User(doc) : null;
   }
+
+  static async deleteMany (...args) {
+    await Model.deleteMany(...args);
+  }
 }
 
 module.exports = User;

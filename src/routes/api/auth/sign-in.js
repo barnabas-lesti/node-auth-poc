@@ -1,6 +1,6 @@
-const { logger } = require('../../../common');
-const { auth } = require('../../../services');
-const { User } = require('../../../models');
+const logger = require('../../../common/logger');
+const auth = require('../../../services/auth');
+const User = require('../../../models/user');
 
 module.exports = {
   async post (req, res) {
