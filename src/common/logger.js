@@ -21,6 +21,7 @@ const transports = [
 
 if (config.LOG_TO_FILE) {
   transports.push(new winston.transports.File({
+    level: 'info',
     filename: generateLogFilePath(),
   }));
 }
@@ -33,7 +34,7 @@ const logger = winston.createLogger({
 });
 
 function generateLogFilePath () {
-  const fileName = `${new Date()}.log`;
+  const fileName = `${Date.now()}.log`;
   return path.join(__dirname, '../../logs', fileName);
 }
 

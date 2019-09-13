@@ -1,14 +1,14 @@
 class Timer {
   createTimer () {
     return {
-      startTime: (new Date()).getTime(),
+      startTime: Date.now(),
       finish,
     };
   }
 }
 
 function finish () {
-  return (new Date()).getTime() - this.startTime;
+  return Date.now() - this.startTime;
 }
 
 module.exports = new Timer();
