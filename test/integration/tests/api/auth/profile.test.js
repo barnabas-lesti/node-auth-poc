@@ -1,4 +1,4 @@
-const { expect, agent, moduleProxy, methods } = require('../../index');
+const { expect, agent, moduleProxy, mock } = require('../../../index');
 const { auth } = moduleProxy;
 
 const url = '/api/auth/profile';
@@ -10,8 +10,8 @@ let existingUser;
 
 describe(url, () => {
   beforeEach(async () => {
-    await methods.removeUsers();
-    existingUser = await methods.createAndInsertFakeUser();
+    await mock.user.removeUsers();
+    existingUser = await mock.user.createAndInsertFakeUser();
   });
 
   describe('GET', () => {
@@ -36,8 +36,8 @@ describe(url, () => {
       expect(status).to.equal(401);
     });
 
-    it('Should have status 200 and update the user', async () => {
-      const userUpdate = methods.createFakeUser();
+    it('Should have status 200, update and return the user', async () => {
+      const userUpdate = mock.user.createFakeUser();
 
       const authHeaderString = await auth.createAuthorizationHeaderStringFromUser(existingUser);
       const { status, body } = await patch()

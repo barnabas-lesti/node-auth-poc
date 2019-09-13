@@ -5,15 +5,15 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 const moduleProxy = require('./module-proxy');
-const methods = require('./methods');
+const mock = require('./mock');
 
 const app = require('../../src/app');
 const agent = () => chai.request(app);
 
 module.exports = {
-  expect,
   faker,
-  moduleProxy,
-  methods,
+  expect,
   agent,
+  mock,
+  moduleProxy,
 };

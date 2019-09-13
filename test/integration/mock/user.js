@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { User, auth } = require('./module-proxy');
+const { User, auth } = require('../module-proxy');
 
 const createFakeUser = () => ({
   email: faker.internet.email(),
