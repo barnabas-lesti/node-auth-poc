@@ -1,46 +1,56 @@
-const { agent, moduleProxy, expect, faker, methods } = require('../../resources');
-
-const { User, auth } = moduleProxy;
+const { expect, agent, moduleProxy, methods } = require('../../index');
+const { auth } = moduleProxy;
 
 const url = '/api/auth/profile';
 
-describe(url, () => {
-  let authHeaderString = null;
-  let createdUser = null;
+const get = () => agent().get(url);
+const patch = () => agent().patch(url);
 
+let existingUser;
+
+describe(url, () => {
   beforeEach(async () => {
-    await User.deleteMany({});
-    createdUser = await methods.createUser();
-    authHeaderString = ;
+    await methods.removeUsers();
+    existingUser = await methods.createAndInsertFakeUser();
   });
 
   describe('GET', () => {
-    const get = () => agent().get(url);
-    const getWithAuth = () => getWithoutAuth().set('Authorization', authHeaderString);
-
     it('Should have status 401 if user is not signed in', async () => {
-      const { status } = await get().send({});
+      const { status } = await get().send();
       expect(status).to.equal(401);
     });
 
-    it('Should have status 404 if user was not found', async () => {
-      const { status } = await get()
-        .set('Authorization', await auth.createAuthorizationHeaderStringFromUser(createdUser));
-    });
-
-    it('Should have status 200 and return the requested user object', async () => {
-      const { status } = await getWithAuth().send({});
+    it('Should have status 200 and return the signed in user', async () => {
+      const authHeaderString = await auth.createAuthorizationHeaderStringFromUser(existingUser);
+      const { status, body } = await get().set(auth.HTTP_HEADER_NAME, authHeaderString).send();
       expect(status).to.equal(200);
+      expect(body).not.to.be.undefined;
+      expect(body.passwordHash).to.be.undefined;
+      expect(body.email).equal(existingUser.email);
     });
   });
 
   describe('PATCH', () => {
-    const patchWithoutAuth = () => agent().patch(url);
-    const patchWithAuth = () => patchWithoutAuth().set('Authorization', authHeaderString);
+    it('Should have status 401 if user is not signed in', async () => {
+      const { status } = await patch().send();
+      expect(status).to.equal(401);
+    });
 
-    it('Should have status 401 if user is not signed in', async () => {});
-    it('Should have status 400 if user was not found', async () => {});
-    it('Should have status 404 if user was not found', async () => {});
-    it('Should have status 200 and update the user in the database', async () => {});
+    it('Should have status 200 and update the user', async () => {
+      const userUpdate = methods.createFakeUser();
+
+      const authHeaderString = await auth.createAuthorizationHeaderStringFromUser(existingUser);
+      const { status, body } = await patch()
+        .set(auth.HTTP_HEADER_NAME, authHeaderString)
+        .send({
+          fullName: userUpdate.fullName,
+        });
+
+      expect(status).to.equal(200);
+      expect(body).not.to.be.undefined;
+      expect(body.passwordHash).to.be.undefined;
+      expect(body.email).equal(existingUser.email);
+      expect(body.fullName).equal(userUpdate.fullName);
+    });
   });
 });

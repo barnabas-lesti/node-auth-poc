@@ -1,5 +1,3 @@
-// const { logger } = require('../../../common');
-// const { auth } = require('../../../services');
 const User = require('../../../models/user');
 
 module.exports = {
@@ -15,6 +13,12 @@ module.exports = {
   },
 
   async patch (req, res) {
-    return res.sendStatus(200);
+    if (!req.user) return res.sendStatus(401);
+
+    const { email } = req.user;
+    const update = req.body;
+    const { passwordHash, ...updatedUser } = await User.update({ email }, update);
+
+    return res.send(updatedUser);
   },
 };

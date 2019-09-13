@@ -45,6 +45,11 @@ class User {
     return doc ? new User(doc) : null;
   }
 
+  static async update (query, update) {
+    const doc = await Model.findOneAndUpdate(query, update, { new: true });
+    return doc ? new User(doc) : null;
+  }
+
   static async deleteMany (...args) {
     await Model.deleteMany(...args);
   }

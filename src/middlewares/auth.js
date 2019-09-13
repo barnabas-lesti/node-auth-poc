@@ -8,7 +8,7 @@ module.exports = () => async (req, res, next) => {
   if (!verificationResult) return next();
 
   const { newHeaderString, payload } = verificationResult;
-  res.set('Authorization', newHeaderString || authHeaderString);
+  res.set(auth.HTTP_HEADER_NAME, newHeaderString || authHeaderString);
 
   req.user = payload;
   return next();

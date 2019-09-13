@@ -5,6 +5,10 @@ const config = require('../common/config');
 const User = require('../models/user');
 
 class Auth {
+  constructor () {
+    this.HTTP_HEADER_NAME = 'Authorization';
+  }
+
   createAuthorizationHeaderStringFromTokens (accessToken, refreshToken) {
     return `Access ${accessToken}; Refresh ${refreshToken};`;
   }

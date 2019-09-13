@@ -1,17 +1,16 @@
-const { agent, moduleProxy, expect, faker } = require('../../resources');
-
-const { config, User, auth } = moduleProxy;
+const { expect, agent, moduleProxy, methods } = require('../../index');
+const { config } = moduleProxy;
 
 const url = '/api/auth/register';
 
+const post = () => agent().post(url);
+
 describe(url, () => {
   beforeEach(async () => {
-    await User.deleteMany({});
+    await methods.removeUsers();
   });
 
   describe('POST', () => {
-    const post = () => agent().post(url);
-
     it('Should have status 501 if registration is disabled', async () => {
       const originalConfigValue = config.AUTH_REGISTRATION_DISABLED;
       config.AUTH_REGISTRATION_DISABLED = true;
@@ -23,9 +22,7 @@ describe(url, () => {
     });
 
     it('Should have status 400 if required fields are missing', async () => {
-      const email = faker.internet.email();
-      const password = faker.internet.password();
-      const fullName = faker.name.findName();
+      const { email, password, fullName } = methods.createFakeUser();
 
       const [ noEmailResponse, noPasswordResponse, noFullNameResponse ] = await Promise.all([
         post().send({ password, fullName }),
@@ -39,25 +36,14 @@ describe(url, () => {
     });
 
     it('Should have status 409 if "email" is already in use', async () => {
-      const email = faker.internet.email();
-      const password = faker.internet.password();
-      const fullName = faker.name.findName();
-
-      const passwordHash = await auth.hashPassword(password);
-      await User.create({ email, passwordHash, fullName });
-
+      const { email, password, fullName } = await methods.createAndInsertFakeUser();
       const { status } = await post().send({ email, password, fullName });
-
       expect(status).to.equal(409);
     });
 
     it('Should have status 200 if registration was successful', async () => {
-      const email = faker.internet.email();
-      const password = faker.internet.password();
-      const fullName = faker.name.findName();
-
+      const { email, password, fullName } = methods.createFakeUser();
       const { status } = await post().send({ email, password, fullName });
-
       expect(status).to.equal(200);
     });
   });

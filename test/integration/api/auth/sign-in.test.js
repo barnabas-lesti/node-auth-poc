@@ -1,20 +1,18 @@
-const { agent, moduleProxy, expect, faker, methods } = require('../../resources');
-
-const { User, auth } = moduleProxy;
+const { expect, agent, moduleProxy, methods } = require('../../index');
+const { auth } = moduleProxy;
 
 const url = '/api/auth/sign-in';
 
+const post = () => agent().post(url);
+
 describe(url, () => {
   beforeEach(async () => {
-    await User.deleteMany({});
+    await methods.removeUsers();
   });
 
   describe('POST', () => {
-    const post = () => agent().post(url);
-
     it('Should have status 400 if required fields are missing', async () => {
-      const email = faker.internet.email();
-      const password = faker.internet.password();
+      const { email, password } = methods.createFakeUser();
 
       const [ noEmailResponse, noPasswordResponse ] = await Promise.all([
         post().send({ password }),
@@ -26,29 +24,23 @@ describe(url, () => {
     });
 
     it('Should have status 401 if user was not found', async () => {
-      const email = faker.internet.email();
-      const password = faker.internet.password();
-
+      const { email, password } = methods.createFakeUser();
       const { status } = await post().send({ email, password });
-
       expect(status).to.equal(401);
     });
 
     it('Should have status 401 if credentials are invalid', async () => {
-      const { email } = await methods.createUser();
-      const invalidPassword = faker.internet.password();
-
-      const { status } = await post().send({ email, password: invalidPassword });
-
+      const existingUser = await methods.createAndInsertFakeUser();
+      const nonExistingUser = methods.createFakeUser();
+      const { status } = await post().send({ email: existingUser.email, password: nonExistingUser.password });
       expect(status).to.equal(401);
     });
 
     it('Should have status 200 and "Authorization" header set if sign in was successful', async () => {
-      const { email, password } = await methods.createUser();
-
+      const { email, password } = await methods.createAndInsertFakeUser();
       const { status, headers } = await post().send({ email, password });
 
-      const authHeader = headers.authorization;
+      const authHeader = headers[auth.HTTP_HEADER_NAME.toLowerCase()];
       const { payload } = await auth.verifyAuthorizationHeaderString(authHeader);
       expect(authHeader).to.be.a('string');
       expect(payload).not.to.be.undefined;
