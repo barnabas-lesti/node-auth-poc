@@ -38,9 +38,9 @@ class Router {
     return path
       .normalize(routePath)
       .replace(ROUTES_FOLDER_PATH, '')
+      .replace(/\\/g, '/')
       .replace(/\.js/g, '')
-      .replace(/\/index$/, '')
-      .replace(/\\/g, '/');
+      .replace(/\/index$/, '');
   }
 
   _convertRouteParamsInRoutePath (routePath) {

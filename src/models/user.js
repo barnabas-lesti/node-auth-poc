@@ -28,15 +28,15 @@ const Model = mongoose.model('User', UserSchema);
 
 class User {
   constructor ({ _id, userId, email, passwordHash, fullName, profileImageId }) {
-    this.userId = _id || userId;
+    this.userId = `${_id || userId}`;
     this.email = email;
     this.passwordHash = passwordHash;
     this.fullName = fullName;
     this.profileImageId = profileImageId;
   }
 
-  static async findOne (...args) {
-    const doc = await Model.findOne(...args);
+  static async findOne (query, ...args) {
+    const doc = await Model.findOne(query, ...args);
     return doc ? new User(doc) : null;
   }
 

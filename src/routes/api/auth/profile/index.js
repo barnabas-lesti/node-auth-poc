@@ -1,4 +1,4 @@
-const User = require('../../../models/user');
+const User = require('../../../../models/user');
 
 module.exports = {
   async get (req, res) {
@@ -15,9 +15,9 @@ module.exports = {
   async patch (req, res) {
     if (!req.user) return res.sendStatus(401);
 
-    const { email } = req.user;
-    const update = req.body;
-    const { passwordHash, ...updatedUser } = await User.update({ email }, update);
+    const { email, passwordHash, ...update } = req.body;
+    const updatedUser = await User.update({ email: req.user.email }, update);
+    updatedUser.passwordHash = undefined;
 
     return res.send(updatedUser);
   },
