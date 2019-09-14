@@ -7,7 +7,7 @@ const config = require('../common/config');
 const logger = require('../common/logger');
 const i18n = require('../services/i18n');
 
-const EMAIL_TEMPLATES_FOLDER_PATH = path.join(__dirname, '../templates/email');
+const EMAIL_TEMPLATES_FOLDER_PATH = path.join(config.APP_ROOT_PATH, './src/templates/email');
 
 let mailgun;
 if (config.EMAIL_MAILGUN_API_KEY && config.EMAIL_MAILGUN_DOMAIN) {

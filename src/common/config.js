@@ -2,7 +2,8 @@ const path = require('path');
 const packageJson = require('../../package.json');
 const requireYml = require('require-yml');
 
-const ENV_FOLDER_PATH = '../../env';
+const APP_ROOT_PATH = path.join(__dirname, '../../');
+const ENV_FOLDER_PATH = path.join(APP_ROOT_PATH, './env');
 const POPULATION_REGEX = /<(.*?)>/g;
 const TOKEN_TO_KEY_REGEX = /<|>/g;
 
@@ -16,12 +17,15 @@ const config = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
   IS_TEST: process.env.NODE_ENV === 'test',
-  TEMP_FOLDER_PATH: path.join(__dirname, '../../../temp'),
+
+  APP_ROOT_PATH,
+  TEMP_FOLDER_PATH: path.join(APP_ROOT_PATH, './temp'),
 
   PORT: envConfig.PORT,
   DEFAULT_LOCALE: envConfig.DEFAULT_LOCALE,
-  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
   LOG_TO_FILE: envConfig.LOG_TO_FILE,
+  CLEAN_LOGS_FOLDER: envConfig.CLEAN_LOGS_FOLDER,
+  CLEAN_TEMP_FOLDER: envConfig.CLEAN_TEMP_FOLDER,
 
   MONGO_URI: envConfig.MONGO_URI,
 
@@ -47,7 +51,7 @@ function getEnvConfig () {
 }
 
 function getRawEnvConfigFromConfigFiles () {
-  const rawConfigPack = requireYml(path.join(__dirname, ENV_FOLDER_PATH));
+  const rawConfigPack = requireYml(ENV_FOLDER_PATH);
   return {
     ...(rawConfigPack.default || {}),
     ...(rawConfigPack[process.env.NODE_ENV] || {}),

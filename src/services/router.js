@@ -1,9 +1,10 @@
 const path = require('path');
 const glob = require('glob');
 
+const config = require('../common/config');
 const logger = require('../common/logger');
 
-const ROUTES_FOLDER_PATH = path.join(__dirname, '../routes');
+const ROUTES_FOLDER_PATH = path.join(config.APP_ROOT_PATH, './src/routes');
 
 class Router {
   initializeRoutes (app) {
