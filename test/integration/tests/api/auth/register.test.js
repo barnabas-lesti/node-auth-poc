@@ -1,4 +1,4 @@
-const { expect, agent, moduleProxy, mock } = require('../../../index');
+const { expect, agent, moduleProxy, data } = require('../../../index');
 const { config } = moduleProxy;
 
 const url = '/api/auth/register';
@@ -7,7 +7,7 @@ const post = () => agent().post(url);
 
 describe(url, () => {
   beforeEach(async () => {
-    await mock.user.removeUsers();
+    await data.users.removeUsers();
   });
 
   describe('POST', () => {
@@ -22,7 +22,7 @@ describe(url, () => {
     });
 
     it('Should have status 400 if required fields are missing', async () => {
-      const { email, password, fullName } = mock.user.createFakeUser();
+      const { email, password, fullName } = data.users.createFakeUser();
 
       const [ noEmailResponse, noPasswordResponse, noFullNameResponse ] = await Promise.all([
         post().send({ password, fullName }),
@@ -36,13 +36,13 @@ describe(url, () => {
     });
 
     it('Should have status 409 if "email" is already in use', async () => {
-      const { email, password, fullName } = await mock.user.createAndInsertFakeUser();
+      const { email, password, fullName } = await data.users.createAndInsertFakeUser();
       const { status } = await post().send({ email, password, fullName });
       expect(status).to.equal(409);
     });
 
     it('Should have status 200 if registration was successful', async () => {
-      const { email, password, fullName } = mock.user.createFakeUser();
+      const { email, password, fullName } = data.users.createFakeUser();
       const { status } = await post().send({ email, password, fullName });
       expect(status).to.equal(200);
     });
