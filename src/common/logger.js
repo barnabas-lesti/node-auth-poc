@@ -1,9 +1,14 @@
 const path = require('path');
+const fs = require('fs-extra');
 const winston = require('winston');
+const { combine, colorize, label, timestamp, printf } = winston.format;
 
 const config = require('./config');
 
-const { combine, colorize, label, timestamp, printf } = winston.format;
+const LOGS_FOLDER_PATH = path.join(config.APP_ROOT_PATH, './logs');
+
+if (config.CLEAN_LOGS_FOLDER) cleanLogsFolder();
+
 const baseFormatConfig = [
   label({ label: config.APP_ABBREVIATION }),
   timestamp(),
@@ -17,14 +22,12 @@ const transports = [
       ...baseFormatConfig,
     ),
   }),
-];
 
-if (config.LOG_TO_FILE) {
-  transports.push(new winston.transports.File({
+  ...(config.LOG_TO_FILE ? [ new winston.transports.File({
     level: 'info',
     filename: generateLogFilePath(),
-  }));
-}
+  }) ] : []),
+];
 
 const logger = winston.createLogger({
   level: config.IS_TEST ? 'error': 'info',
@@ -36,6 +39,10 @@ const logger = winston.createLogger({
 function generateLogFilePath () {
   const fileName = `${Date.now()}.log`;
   return path.join(__dirname, '../../logs', fileName);
+}
+
+function cleanLogsFolder () {
+  if (fs.pathExistsSync(LOGS_FOLDER_PATH)) fs.removeSync(LOGS_FOLDER_PATH);
 }
 
 module.exports = logger;
