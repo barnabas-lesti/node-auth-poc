@@ -12,7 +12,7 @@ const envConfig = getEnvConfig();
 const config = {
   APP_NAME: packageJson.name,
   APP_VERSION: packageJson.version,
-  APP_ABBREVIATION: packageJson.daisy.abbreviation,
+  APP_ABBREVIATION: packageJson.app.abbreviation,
 
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_PRODUCTION: process.env.NODE_ENV === 'production',

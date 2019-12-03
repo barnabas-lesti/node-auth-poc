@@ -1,9 +1,9 @@
 {
-  "name": "daisy-backend-app",
+  "name": "node-auth-poc",
   "version": "1.0.0",
-  "description": "Backend API application for Daisy.",
-  "daisy": {
-    "abbreviation": "dba"
+  "description": "Authentication POC in Node.",
+  "app": {
+    "abbreviation": "nap"
   },
   "author": "Barnabas Lesti <barnabas.lesti@gmail.com>",
   "license": "MIT",

@@ -7,7 +7,7 @@ emails:
       Please verify your email address by clicking <a href=\"${linkHref}\" target=\"_blank\">here</a>.<br>
       <br>
       Best regards,<br>
-      The Daisy Team
+      The NAP Team
     "
   passwordReset:
     subject: 'Reset your password'
@@ -17,5 +17,5 @@ emails:
       To reset your password click <a href=\"${linkHref}\" target=\"_blank\">here</a>.<br>
       <br>
       Best regards,<br>
-      The Daisy Team
+      The NAP Team
     "
